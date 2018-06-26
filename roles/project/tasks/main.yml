@@ -1,0 +1,6 @@
+---
+# tasks file for roles/project
+  - name: Create Student Project
+    keystone_user:
+      tenant: test
+      state: present
