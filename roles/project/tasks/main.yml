@@ -1,6 +1,7 @@
 ---
 # tasks file for roles/project
   - name: Create Student Project
-    keystone_user:
-      tenant: test
+    os_project:
+      name: student-{{ sid }}
       state: present
+      endpoint_type: admin

@@ -1,2 +1,34 @@
 ---
 # tasks file for roles/networks
+
+- name: Create student-{{sid }} visible network
+  os_network:
+    auth:
+      project_name: student-{{ sid }}
+    name: student-{{ sid }}-visiblenet
+    state: present
+  register: visiblenet
+
+- name: create visible subnet
+  os_subnet:
+    auth: 
+      project_name: student-{{ sid }}
+    name: student-{{ sid }}-visiblesub
+    network_name: "{{ visiblenet.network.name }}"
+    cidr: 10.0.0.0/24
+
+- name: Create student-{{sid }} hidden network
+  os_network:
+    auth:
+      project_name: student-{{ sid }}
+    name: student-{{ sid }}-hiddennet
+    state: present
+  register: hiddennet
+
+- name: create hidden subnet
+  os_subnet:
+    auth:
+      project_name: student-{{ sid }}
+   name: student-{{ sid }}-hiddensub
+    network_name: "{{ hiddennet.network.name }}"
+    cidr: 139.39.0.0/24

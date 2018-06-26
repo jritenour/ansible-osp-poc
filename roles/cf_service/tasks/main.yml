@@ -1,2 +1,39 @@
 ---
 # tasks file for roles/cf_service
+# - name: Set the Provider URL
+#   set_fact:
+#     provider_url: "{{ manageiq.api_url }}/api/providers/20000000000009"
+
+# - name: Set the Service URL
+#   set_fact:
+#     svc_url: "/api/{{ manageiq.service }}"
+ 
+ - name: Launch visible instances
+   os_server:
+     auth:
+       project_name: student-{{ sid }}
+     name: student-visible-{{ sid }}
+     state: present
+     key_name: "{{ key_name }}"
+     availability_zone: "{{ az }}"
+     nics:
+       - net-id: "{{ visiblenet.network.id }}"
+     image: "{{ image_uid }}"
+     flavor: "{{ flavor_name }}"
+     security_groups: "{{ security_group }}"
+     auto_ip: no
+
+ - name: Launch hidden instances
+   os_server:
+     auth:
+       project_name: student-{{ sid }}
+     name: student-hidden-{{ sid }}
+     state: present
+     key_name: "{{ key_name }}"
+     availability_zone: "{{ az }}"
+     nics:
+       - net-id: "{{ hiddennet.network.id }}"
+     image: "{{ image_uid }}"
+     flavor: "{{ flavor_name }}"
+     security_groups: "{{ security_group }}"
+     auto_ip: no
