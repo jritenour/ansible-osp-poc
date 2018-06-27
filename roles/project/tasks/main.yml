@@ -5,3 +5,12 @@
       name: student-{{ sid }}
       state: present
       endpoint_type: admin
+
+  - name: Add operator to student project
+    os_user_role:
+      user: operator
+      role: {{ item }}
+      project: student-{{ sid }}
+    with_items:  
+      - admin
+      - member
