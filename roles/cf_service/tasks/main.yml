@@ -11,6 +11,9 @@
  - name: Launch visible instances
    os_server:
      auth:
+       auth_url: "{{ osp_url }}"
+       username: "{{ osp_user }}"
+       password: "{{ osp_pass }}"
        project_name: student-{{ sid }}
      name: student-visible-{{ sid }}
      state: present
