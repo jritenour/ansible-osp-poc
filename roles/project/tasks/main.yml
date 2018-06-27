@@ -9,7 +9,7 @@
   - name: Add operator to student project
     os_user_role:
       user: operator
-      role: {{ item }}
+      role: "{{ item }}"
       project: student-{{ sid }}
     with_items:  
       - admin
