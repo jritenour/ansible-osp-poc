@@ -29,6 +29,6 @@
   os_subnet:
     auth:
       project_name: student-{{ sid }}
-   name: student-{{ sid }}-hiddensub
+    name: student-{{ sid }}-hiddensub
     network_name: "{{ hiddennet.network.name }}"
     cidr: 139.39.0.0/24
