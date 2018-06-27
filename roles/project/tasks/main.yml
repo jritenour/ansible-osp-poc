@@ -19,8 +19,5 @@
         password: "{{ osp_pass }}"
         project_name: operators
       user: operator
-      role: "{{ item }}"
+      role: admin
       project: student-{{ sid }}
-    with_items:  
-      - admin
-      - member
