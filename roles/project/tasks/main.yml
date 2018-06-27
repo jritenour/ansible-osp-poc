@@ -2,12 +2,22 @@
 # tasks file for roles/project
   - name: Create Student Project
     os_project:
+      auth:
+        auth_url: "{{ osp_url }}"
+        username: "{{ osp_user }}"
+        password: "{{ osp_pass }}"
+        project_name: operators        
       name: student-{{ sid }}
       state: present
       endpoint_type: admin
 
   - name: Add operator to student project
     os_user_role:
+      auth:
+        auth_url: "{{ osp_url }}"
+        username: "{{ osp_user }}"
+        password: "{{ osp_pass }}"
+        project_name: operators
       user: operator
       role: "{{ item }}"
       project: student-{{ sid }}

@@ -2,8 +2,8 @@
 - hosts: localhost
   connection: local
   gather_facts: no
-  vars:
-    config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
+  vars_files:
+  - '../main.yml'
   roles:
   - project
   - networks

@@ -4,6 +4,9 @@
 - name: Create student-{{ sid }} visible network
   os_network:
     auth:
+      auth_url: "{{ osp_url }}"
+      username: "{{ osp_user }}"
+      password: "{{ osp_pass }}"
       project_name: student-{{ sid }}
     name: student-{{ sid }}-visiblenet
     state: present
@@ -11,7 +14,10 @@
 
 - name: create visible subnet
   os_subnet:
-    auth: 
+    auth:
+      auth_url: "{{ osp_url }}"
+      username: "{{ osp_user }}"
+      password: "{{ osp_pass }}"
       project_name: student-{{ sid }}
     name: student-{{ sid }}-visiblesub
     network_name: "{{ visiblenet.network.name }}"
@@ -20,6 +26,9 @@
 - name: Create student-{{sid }} hidden network
   os_network:
     auth:
+      auth_url: "{{ osp_url }}"
+      username: "{{ osp_user }}"
+      password: "{{ osp_pass }}"
       project_name: student-{{ sid }}
     name: student-{{ sid }}-hiddennet
     state: present
@@ -28,6 +37,9 @@
 - name: create hidden subnet
   os_subnet:
     auth:
+      auth_url: "{{ osp_url }}"
+      username: "{{ osp_user }}"
+      password: "{{ osp_pass }}"
       project_name: student-{{ sid }}
     name: student-{{ sid }}-hiddensub
     network_name: "{{ hiddennet.network.name }}"
