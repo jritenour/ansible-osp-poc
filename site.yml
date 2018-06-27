@@ -1,8 +1,6 @@
 ---
 - hosts: localhost
-  vars_files:
-    - ../main.yml
   roles:
   - project
-#  - networks
-#  - cf_service
+  - networks
+  - cf_service
