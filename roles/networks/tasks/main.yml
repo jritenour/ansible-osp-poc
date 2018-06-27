@@ -1,12 +1,9 @@
 ---
 # tasks file for roles/networks
 
-- name: Create student-{{sid }} visible network
+- name: Create student-{{ sid }} visible network
   os_network:
     auth:
-      auth_url: "{{ osp_url }}"
-      username: "{{ osp_user }}"
-      password: "{{ osp_pass }}"
       project_name: student-{{ sid }}
     name: student-{{ sid }}-visiblenet
     state: present
