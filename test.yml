@@ -1,0 +1,98 @@
+---
+- hosts: localhost
+  connection: local
+  vars: 
+    - key_name: jritenour
+    - flavor_name: m1.small
+    - security_group: default
+    - az: nova
+    - image_uid: bfeec61d-c58b-468b-858d-111039b76462
+  tasks:
+  - name: Create Student Project
+    os_project:
+      name: student-{{ sid }}
+      state: present
+      endpoint_type: admin
+
+  - name: Add operator to student project
+    os_user_role:
+      user: operator
+      role: "{{ item }}"
+      project: student-{{ sid }} 
+      endpoint_type: admin
+    with_items:
+      - admin
+      - Member
+
+  - name: Create student-{{ sid }} visible network
+    os_network:
+      auth:
+        project_name: student-{{ sid }}
+      name: student-{{ sid }}-visiblenet
+      state: present
+    register: visiblenet
+
+  - name: create visible subnet
+    os_subnet:
+      auth:
+        project_name: student-{{ sid }}
+      name: student-{{ sid }}-visiblesub
+      network_name: student-{{ sid }}-visiblenet
+      cidr: 10.0.0.0/24
+
+  - name: Create student-{{sid }} hidden network
+    os_network:
+      auth:
+        project_name: student-{{ sid }}
+      name: student-{{ sid }}-hiddennet
+      state: present
+    register: hiddennet
+
+  - name: create hidden subnet
+    os_subnet:
+      auth:
+        project_name: student-{{ sid }}
+      name: student-{{ sid }}-hiddensub
+      network_name: student-{{ sid }}-hiddennet
+      cidr: 139.39.0.0/24
+  - name: Create "{{ sid }}" router
+    os_router:
+      auth:
+        project_name: student-{{ sid }}
+      state: present
+      name: router-student-{{ sid }}
+      network: public
+      project: student-{{ sid }}
+      interfaces:
+        - student-{{ sid }}-visiblesub
+        - student-{{ sid }}-hiddensub
+
+  - name: Launch visible instances
+    os_server:
+      auth:
+        project_name: student-{{ sid }}
+      name: student-visible-{{ sid }}
+      state: present
+      key_name: "{{ key_name }}"
+      availability_zone: "{{ az }}"
+      nics:
+        - net-id: "{{ visiblenet.network.id }}"
+      image: "{{ image_uid }}"
+      flavor: "{{ flavor_name }}"
+      security_groups: "{{ security_group }}"
+      auto_ip: no
+
+  - name: Launch hidden instances
+    os_server:
+      auth:
+        project_name: student-{{ sid }}
+      name: student-hidden-{{ sid }}
+      state: present
+      key_name: "{{ key_name }}"
+      availability_zone: "{{ az }}"
+      nics:
+        - net-id: "{{ hiddennet.network.id }}"
+      image: "{{ image_uid }}"
+      flavor: "{{ flavor_name }}"
+      security_groups: "{{ security_group }}"
+      auto_ip: no
