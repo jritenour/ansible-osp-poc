@@ -123,7 +123,6 @@
         chpasswd:
           list: |
             root:redhat
-            cloud-user:redhat
           expire: false
 
   - name: Launch hidden instances
@@ -148,5 +147,4 @@
         chpasswd:
           list: |
             root:redhat
-            cloud-user:redhat
           expire: false
