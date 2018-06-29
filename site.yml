@@ -27,9 +27,10 @@
     az: nova
     image_uid: bfeec61d-c58b-468b-858d-111039b76462
     win_image: 7dc8185d-4739-43b8-a697-1301044e64ac
-    visibility: visible
     config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
   tasks: 
+    vars:
+      visibility: visible
   - stat: path="{{ config_file }}"
     register: st
   - include_vars: "{{ config_file }}"
