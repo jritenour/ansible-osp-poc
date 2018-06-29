@@ -20,6 +20,10 @@
   - name: "Print out clouds variable"
     debug: msg="{{ clouds|default('No clouds found') }}"
 
+  - name: Authenticate to OpenStack environment defined in credentials
+    os_auth: 
+      cloud: devstack
+  
   - name: Create Student Project
     os_project:
       name: student-{{ sid }}
