@@ -1,9 +1,4 @@
 ---
-- hosts: localhost
-  gather_facts: no
-  connection: local
-  tasks:
-
   - name: Set the Provider URL
     set_fact:
       provider_url: "https://192.168.1.101/api/providers/20000000000005"
