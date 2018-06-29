@@ -11,14 +11,10 @@
 
   tasks:
 
-  - debug: msg="{{ config_file }}"
   - stat: path="{{ config_file }}"
     register: st
   - include_vars: "{{ config_file }}"
     when: st.stat.exists and st.stat.isreg
-
-  - name: "Print out clouds variable"
-    debug: msg="{{ clouds|default('No clouds found') }}"
 
   - name: Authenticate to OpenStack environment defined in credentials
     os_auth: 
@@ -101,9 +97,9 @@
       interfaces:
         - student-{{ sid }}-visiblesub
         - student-{{ sid }}-hiddensub
-        - net: central-range
-          subnet: central-range-sub
-          portip: 172.16.250.1{{ sid }}
+#        - net: central-range
+#          subnet: central-range-sub
+#          portip: 172.16.250.1{{ sid }}
 
   - name: Launch visible instances
     os_server:
