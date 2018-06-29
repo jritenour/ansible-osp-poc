@@ -78,6 +78,7 @@
       network_name: student-{{ sid }}-hiddennet
       cidr: 139.39.0.0/24
 
+  - name: Create the central-range port
     os_port:
       cloud: devstack
       auth:
