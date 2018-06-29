@@ -5,7 +5,7 @@
 
   - name: Get services
     uri:
-      url: "https://192.168.1.101/api/services"
+      url: "https://192.168.1.101/api/services?offset=0&limit=500%20&sort_order=asc&sort_by=id"
       method: GET
       return_content: yes
       user: admin
@@ -44,26 +44,6 @@
   - name: Pause to wait for instance to register as 'running'
     pause:
       seconds: 30
-
-  - name: Refresh provider in CloudForms
-    uri:
-      url: "{{ provider_url }}"
-      method: POST
-      body:
-        action: refresh
-      body_format: json
-      user: admin
-      password: "{{ cf_password }}"
-      validate_certs: False
-      headers:
-        Content-Type: "application/json"
-      status_code: 200
-    register: output
-  - debug: var=output
-  - name: set the task href
-    set_fact:
-      task_url: "{{ output.json.task_href}}"
-  - debug: var=task_url
 
   - name: Refresh provider in CloudForms
     uri:

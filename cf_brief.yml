@@ -1,11 +1,16 @@
 ---
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+
   - name: Set the Provider URL
     set_fact:
       provider_url: "https://192.168.1.101/api/providers/20000000000005"
 
   - name: Get services
     uri:
-      url: "https://192.168.1.101/api/services?offset=0&limit=500%20&sort_order=asc&sort_by=id"
+      url: "https://192.168.1.101/api/services"
       method: GET
       return_content: yes
       user: admin
@@ -20,34 +25,14 @@
     set_fact:
       svc_url: "{{ service.json.resources|last|json_query('href') }}"
 
-  - name: Launch "{{ visibility }}" Linux instance
-    os_server:
-      cloud: devstack
-      auth:
-        project_name: student-{{ sid }}
-      name: linux-{{ visibility }}-{{ sid }}
-      state: present
-      key_name: "{{ key_name }}"
-      availability_zone: "{{ az }}"
-      nics:
-        - net-name: student-{{ sid }}-{{ visibility }}net
-      image: "{{ image_uid }}"
-      flavor: "{{ flavor_name }}"
-      security_groups: "{{ security_group }}"
-      auto_ip: no
-      user_data: |
-        #cloud-config
-        ssh_pwauth: True
-        disable_root: false
-        chpasswd:
-          list: |
-            root:redhat
-          expire: false
+  - name: getfacts
+    os_server_facts:
+      server: "{{ vm_name }}"
     register: new_vm
 
-  - debug: var=new_vm.server.id
+  - debug: var=new_vm.ansible_facts.openstack_servers[0].id
 
-  - set_fact: new_vm_uuid="{{ new_vm.server.id }}"
+  - set_fact: new_vm_uuid="{{ new_vm.ansible_facts.openstack_servers[0].id }}"
 
 
   - name: Refresh provider in CloudForms
