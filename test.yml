@@ -7,6 +7,7 @@
     security_group: default
     az: nova
     image_uid: bfeec61d-c58b-468b-858d-111039b76462
+    win_image: 7dc8185d-4739-43b8-a697-1301044e64ac
     config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
 
   tasks:
@@ -101,12 +102,12 @@
 #          subnet: central-range-sub
 #          portip: 172.16.250.1{{ sid }}
 
-  - name: Launch visible instances
+  - name: Launch visible Linux instance
     os_server:
       cloud: devstack
       auth:
         project_name: student-{{ sid }}
-      name: student-visible-{{ sid }}
+      name: linux-visible-{{ sid }}
       state: present
       key_name: "{{ key_name }}"
       availability_zone: "{{ az }}"
@@ -125,12 +126,28 @@
             root:redhat
           expire: false
 
-  - name: Launch hidden instances
+  - name: Launch visible Windows instance
     os_server:
       cloud: devstack
       auth:
         project_name: student-{{ sid }}
-      name: student-hidden-{{ sid }}
+      name: win-visible-{{ sid }}
+      state: present
+      key_name: "{{ key_name }}"
+      availability_zone: "{{ az }}"
+      nics:
+        - net-id: "{{ visiblenet.network.id }}"
+      image: "{{ win_image }}"
+      flavor: "{{ flavor_name }}"
+      security_groups: "{{ security_group }}"
+      auto_ip: no
+
+  - name: Launch hidden Linux instance
+    os_server:
+      cloud: devstack
+      auth:
+        project_name: student-{{ sid }}
+      name: linux-hidden-{{ sid }}
       state: present
       key_name: "{{ key_name }}"
       availability_zone: "{{ az }}"
@@ -148,3 +165,19 @@
           list: |
             root:redhat
           expire: false
+
+  - name: Launch hidden Windows instance
+    os_server:
+      cloud: devstack
+      auth:
+        project_name: student-{{ sid }}
+      name: win-hidden-{{ sid }}
+      state: present
+      key_name: "{{ key_name }}"
+      availability_zone: "{{ az }}"
+      nics:
+        - net-id: "{{ hiddennet.network.id }}"
+      image: "{{ win_image }}"
+      flavor: "{{ flavor_name }}"
+      security_groups: "{{ security_group }}"
+      auto_ip: no
