@@ -28,12 +28,14 @@
     os_project:
       name: student-{{ sid }}
       state: present
+      cloud: devstack
       endpoint_type: admin
 
   - name: Add operator to student project
     os_user_role:
       user: operator
       role: "{{ item }}"
+      cloud: devstack
       project: student-{{ sid }} 
       endpoint_type: admin
     with_items:
@@ -42,6 +44,7 @@
 
   - name: Create student-{{ sid }} visible network
     os_network:
+      cloud: devstack
       auth:
         project_name: student-{{ sid }}
       name: student-{{ sid }}-visiblenet
