@@ -45,9 +45,9 @@
           expire: false
     register: new_vm
 
-  - debug: var=new_vm.ansible_facts.openstack_servers[0].id
+  - debug: var=new_vm.server.id
 
-  - set_fact: new_vm_uuid="{{ new_vm.ansible_facts.openstack_servers[0].id }}"
+  - set_fact: new_vm_uuid="{{ new_vm.server.id }}"
 
 
   - name: Refresh provider in CloudForms
