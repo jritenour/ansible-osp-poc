@@ -3,18 +3,12 @@
   gather_facts: no
   connection: local
   tasks:
-  - name: create port
-    os_port:
-      auth:
-        project_name: student-{{ sid }}
-      state: present
-      name: port-{{ sid }}
-      network: central-range
-      fixed_ips:
-        - ip_address: 172.16.250.1{{ sid }}
   - name: add a thing
     os_router:
       auth:
+        auth_url: "{{ osp_url }}"
+        username: "{{ osp_user }}"
+        password: "{{ osp_pass }}"
         project_name: student-{{ sid }}
       state: present
       name: router-student-{{ sid }}
