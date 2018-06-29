@@ -1,46 +1,65 @@
 ---
 # tasks file for roles/networks
+  - name: Create student-{{ sid }} visible network
+    os_network:
+      cloud: devstack
+      auth:
+        project_name: student-{{ sid }}
+      name: student-{{ sid }}-visiblenet
+      state: present
+    register: visiblenet
 
-- name: Create student-{{ sid }} visible network
-  os_network:
-    auth:
-      auth_url: "{{ osp_url }}"
-      username: "{{ osp_user }}"
-      password: "{{ osp_pass }}"
-      project_name: student-{{ sid }}
-    name: student-{{ sid }}-visiblenet
-    state: present
-  register: visiblenet
+  - name: create visible subnet
+    os_subnet:
+      cloud: devstack
+      auth:
+        project_name: student-{{ sid }}
+      name: student-{{ sid }}-visiblesub
+      network_name: student-{{ sid }}-visiblenet
+      cidr: 10.0.0.0/24
 
-- name: create visible subnet
-  os_subnet:
-    auth:
-      auth_url: "{{ osp_url }}"
-      username: "{{ osp_user }}"
-      password: "{{ osp_pass }}"
-      project_name: student-{{ sid }}
-    name: student-{{ sid }}-visiblesub
-    network_name: "{{ visiblenet.network.name }}"
-    cidr: 10.0.0.0/24
+  - name: Create student-{{sid }} hidden network
+    os_network:
+      cloud: devstack
+      auth:
+        project_name: student-{{ sid }}
+      name: student-{{ sid }}-hiddennet
+      state: present
+    register: hiddennet
 
-- name: Create student-{{sid }} hidden network
-  os_network:
-    auth:
-      auth_url: "{{ osp_url }}"
-      username: "{{ osp_user }}"
-      password: "{{ osp_pass }}"
-      project_name: student-{{ sid }}
-    name: student-{{ sid }}-hiddennet
-    state: present
-  register: hiddennet
+  - name: create hidden subnet
+    os_subnet:
+      cloud: devstack
+      auth:
+        project_name: student-{{ sid }}
+      name: student-{{ sid }}-hiddensub
+      network_name: student-{{ sid }}-hiddennet
+      cidr: 139.39.0.0/24
 
-- name: create hidden subnet
-  os_subnet:
-    auth:
-      auth_url: "{{ osp_url }}"
-      username: "{{ osp_user }}"
-      password: "{{ osp_pass }}"
-      project_name: student-{{ sid }}
-    name: student-{{ sid }}-hiddensub
-    network_name: "{{ hiddennet.network.name }}"
-    cidr: 139.39.0.0/24
+  - name: Create the central-range port
+    os_port:
+      cloud: devstack
+      auth:
+        project_name: student-{{ sid }}
+      state: present
+      name: port-{{ sid }}
+      network: central-range
+      fixed_ips:
+        - ip_address: 172.16.250.1{{ sid }}
+
+  - name: Create "{{ sid }}" router
+    os_router:
+      cloud: devstack
+      auth:
+        project_name: student-{{ sid }}
+      state: present
+      name: router-student-{{ sid }}
+      network: public
+      project: student-{{ sid }}
+      interfaces:
+        - student-{{ sid }}-visiblesub
+        - student-{{ sid }}-hiddensub
+#        - net: central-range
+#          subnet: central-range-sub
+#          portip: 172.16.250.1{{ sid }}
+
