@@ -2,12 +2,29 @@
 - hosts: localhost
   connection: local
   vars: 
-    - key_name: jritenour
-    - flavor_name: m1.small
-    - security_group: default
-    - az: nova
-    - image_uid: bfeec61d-c58b-468b-858d-111039b76462
+    key_name: jritenour
+    flavor_name: m1.small
+    security_group: default
+    az: nova
+    image_uid: bfeec61d-c58b-468b-858d-111039b76462
+    config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
+
   tasks:
+
+  - debug: msg="{{ config_file }}"
+  - stat: path="{{ config_file }}"
+    register: st
+  - include_vars: "{{ config_file }}"
+    when: st.stat.exists and st.stat.isreg
+
+  - name: "Print out clouds variable"
+    debug: msg="{{ clouds|default('No clouds found') }}"
+
+  - name: Create OS_CLIENT_CONFIG_FILE 
+    template:
+      src: "templates/openstack.yaml.j2"
+      dest: /tmp/openstack.yaml
+
   - name: Create Student Project
     os_project:
       name: student-{{ sid }}
