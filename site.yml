@@ -29,8 +29,6 @@
     win_image: 7dc8185d-4739-43b8-a697-1301044e64ac
     config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
   tasks: 
-    vars:
-      visibility: visible
   - stat: path="{{ config_file }}"
     register: st
   - include_vars: "{{ config_file }}"
@@ -40,8 +38,8 @@
     os_auth:
       cloud: devstack
   roles:
-  - lin_instance
-  - win_instance
+  - { role: lin_instance, visibility: visible }
+  - { role: win_instance, visibility: visible }
 
 - hosts: localhost
   connection: local
