@@ -99,9 +99,9 @@
       interfaces:
         - student-{{ sid }}-visiblesub
         - student-{{ sid }}-hiddensub
-#        - net: central-range
-#          subnet: central-range-sub
-#          portip: 172.16.250.1{{ sid }}
+        - net: central-range
+          subnet: central-range-sub
+          portip: 172.16.250.1{{ sid }}
 
   - name: Launch visible Linux instance
     os_server:
