@@ -20,11 +20,6 @@
   - name: "Print out clouds variable"
     debug: msg="{{ clouds|default('No clouds found') }}"
 
-  - name: Create OS_CLIENT_CONFIG_FILE 
-    template:
-      src: "templates/openstack.yaml.j2"
-      dest: /tmp/openstack.yaml
-
   - name: Create Student Project
     os_project:
       name: student-{{ sid }}
