@@ -30,7 +30,7 @@
       key_name: "{{ key_name }}"
       availability_zone: "{{ az }}"
       nics:
-        - net-name: student-{{ sid }}-{{ visiblity }}net
+        - net-name: student-{{ sid }}-{{ visibility }}net
       image: "{{ win_image }}"
       flavor: "{{ win_flavor }}"
       security_groups: "{{ security_group }}"
