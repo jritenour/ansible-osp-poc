@@ -53,6 +53,7 @@
 
   - name: create visible subnet
     os_subnet:
+      cloud: devstack
       auth:
         project_name: student-{{ sid }}
       name: student-{{ sid }}-visiblesub
@@ -61,6 +62,7 @@
 
   - name: Create student-{{sid }} hidden network
     os_network:
+      cloud: devstack
       auth:
         project_name: student-{{ sid }}
       name: student-{{ sid }}-hiddennet
@@ -69,13 +71,16 @@
 
   - name: create hidden subnet
     os_subnet:
+      cloud: devstack
       auth:
         project_name: student-{{ sid }}
       name: student-{{ sid }}-hiddensub
       network_name: student-{{ sid }}-hiddennet
       cidr: 139.39.0.0/24
+
   - name: Create "{{ sid }}" router
     os_router:
+      cloud: devstack
       auth:
         project_name: student-{{ sid }}
       state: present
@@ -91,6 +96,7 @@
 
   - name: Launch visible instances
     os_server:
+      cloud: devstack
       auth:
         project_name: student-{{ sid }}
       name: student-visible-{{ sid }}
@@ -103,9 +109,19 @@
       flavor: "{{ flavor_name }}"
       security_groups: "{{ security_group }}"
       auto_ip: no
+      user_data: |
+        #cloud-config
+        ssh_pwauth: True
+        disable_root: false
+        chpasswd:
+          list: |
+            root:redhat
+            cloud-user:redhat
+          expire: false
 
   - name: Launch hidden instances
     os_server:
+      cloud: devstack
       auth:
         project_name: student-{{ sid }}
       name: student-hidden-{{ sid }}
@@ -118,3 +134,12 @@
       flavor: "{{ flavor_name }}"
       security_groups: "{{ security_group }}"
       auto_ip: no
+      user_data: |
+        #cloud-config
+        ssh_pwauth: True
+        disable_root: false
+        chpasswd:
+          list: |
+            root:redhat
+            cloud-user:redhat
+          expire: false
