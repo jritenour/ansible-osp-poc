@@ -25,7 +25,7 @@
       cloud: devstack
       auth:
         project_name: student-{{ sid }}
-      name: linux-visible-{{ sid }}
+      name: linux-{{ visible }}-{{ sid }}
       state: present
       key_name: "{{ key_name }}"
       availability_zone: "{{ az }}"

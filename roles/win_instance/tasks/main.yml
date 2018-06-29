@@ -20,12 +20,12 @@
     set_fact:
       svc_url: "{{ service.json.resources|last|json_query('href') }}"
 
-  - name: Launch "{{ visibility }}"  Windows instance
+  - name: Launch "{{ visibility }}" Windows instance
     os_server:
       cloud: devstack
       auth:
         project_name: student-{{ sid }}
-      name: win-visible-{{ sid }}
+      name: win-{{ visibility }}-{{ sid }}
       state: present
       key_name: "{{ key_name }}"
       availability_zone: "{{ az }}"
