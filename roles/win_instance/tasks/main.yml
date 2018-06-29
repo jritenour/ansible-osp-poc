@@ -41,6 +41,9 @@
 
   - set_fact: new_vm_uuid="{{ new_vm.server.id }}"
 
+  - name: Pause to wait for instance to register as 'running'
+    pause:
+      seconds: 30
 
   - name: Refresh provider in CloudForms
     uri:
