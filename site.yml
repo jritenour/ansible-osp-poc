@@ -1,8 +1,68 @@
 ---
 - hosts: localhost
   connection: local
-  gather_facts: no
+  vars:
+    config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
+  tasks:
+
+  - stat: path="{{ config_file }}"
+    register: st
+  - include_vars: "{{ config_file }}"
+    when: st.stat.exists and st.stat.isreg
+
+  - name: Authenticate to OpenStack environment defined in credentials
+    os_auth: 
+      cloud: devstack
   roles:
   - project
   - networks
-  - cf_service
+
+- hosts: localhost
+  connection: local
+  vars:
+    key_name: jritenour
+    flavor_name: m1.small
+    win_flavor: m1.large
+    security_group: default
+    az: nova
+    image_uid: bfeec61d-c58b-468b-858d-111039b76462
+    win_image: 7dc8185d-4739-43b8-a697-1301044e64ac
+    visibility: visible
+    config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
+  tasks: 
+  - stat: path="{{ config_file }}"
+    register: st
+  - include_vars: "{{ config_file }}"
+    when: st.stat.exists and st.stat.isreg
+
+  - name: Authenticate to OpenStack environment defined in credentials
+    os_auth:
+      cloud: devstack
+  roles:
+  - lin_instance
+  - win_instance
+
+- hosts: localhost
+  connection: local
+  vars:
+    key_name: jritenour
+    flavor_name: m1.small
+    win_flavor: m1.large
+    security_group: default
+    az: nova
+    image_uid: bfeec61d-c58b-468b-858d-111039b76462
+    win_image: 7dc8185d-4739-43b8-a697-1301044e64ac
+    visibility: hidden
+    config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
+  tasks: 
+  - stat: path="{{ config_file }}"
+    register: st
+  - include_vars: "{{ config_file }}"
+    when: st.stat.exists and st.stat.isreg
+
+  - name: Authenticate to OpenStack environment defined in credentials
+    os_auth:
+      cloud: devstack
+  roles:
+  - lin_instance
+  - win_instance
