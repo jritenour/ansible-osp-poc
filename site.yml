@@ -66,6 +66,17 @@
   roles:
   - lin_instance
   - win_instance
+
+- hosts: localhost
+  connection: local
+  vars:
+    config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
+  tasks: 
+  - stat: path="{{ config_file }}"
+    register: st
+  - include_vars: "{{ config_file }}"
+    when: st.stat.exists and st.stat.isreg
+  roles:
   - cf_service
 
 - import_playbook: routercmd.yml
