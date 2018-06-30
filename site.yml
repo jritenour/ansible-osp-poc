@@ -76,6 +76,10 @@
     register: st
   - include_vars: "{{ config_file }}"
     when: st.stat.exists and st.stat.isreg
+  - name: Authenticate to OpenStack environment defined in credentials
+    os_auth:
+      cloud: devstack
+
   roles:
   - cf_service
 
