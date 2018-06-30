@@ -1,0 +1,5 @@
+---
+- hosts: all
+  tasks: 
+  - name: Add central-range port to student "{{ sid }}" router
+    shell: source /home/stack/overcloudrc; openstack router add port router-student-{{ sid }} port-{{ sid }}
