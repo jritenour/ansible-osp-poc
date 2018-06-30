@@ -11,8 +11,7 @@
   - name: Authenticate to OpenStack environment defined in credentials
     os_auth:
       cloud: devstack
-
-  roles:
-  - cf_service
+  - include_role:
+      name: cf_service
 
 

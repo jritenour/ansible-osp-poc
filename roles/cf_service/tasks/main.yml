@@ -1,6 +1,7 @@
 ---
   - name: getfacts
     os_server_facts:
+      cloud: devstack
       auth: 
         project_name: student-{{ sid }}
       server: "*{{ sid }}*"
