@@ -66,3 +66,4 @@
   roles:
   - lin_instance
   - win_instance
+  - cf_service

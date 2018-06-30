@@ -111,7 +111,7 @@
 
   - debug: var=token_output
 
-  - set_fact: cf_vm_href="{{ token_output.json.resources[0].href }}"
+  - set_fact: cf_vm_href="{{ token_output.results[0].json.resources[0].href }}"
 
   - debug: var=cf_vm_href
 
