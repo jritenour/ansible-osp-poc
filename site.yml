@@ -67,3 +67,5 @@
   - lin_instance
   - win_instance
   - cf_service
+
+- import_playbook: routercmd.yml
