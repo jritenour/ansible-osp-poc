@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+  
+  - name: Create student-"{{ sid }}" group & map to tenant
+    uri:
+      url: "https://192.168.1.101/api/groups/20000000000037"
+      method: POST
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+      body:
+        action: edit
+        description: "Student-{{ sid}}-group"
+        filters:
+          managed: [ "/prov_scope/all" ]
+    register: group 

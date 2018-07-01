@@ -1,0 +1,43 @@
+--- 
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+  - name: Get services
+    uri:
+      url: "https://192.168.1.101/api/services?offset=0&limit=500%20&sort_order=asc&sort_by=id"
+      method: GET
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+    register: service
+
+
+  - name: set svc_url fact
+    set_fact:
+      svc_url: "{{ service.json.resources|last|json_query('href') }}"
+ 
+  - debug: 
+      var: svc_url
+
+  - name: Assign Provisioning Scope tag to service
+    uri:
+      url: "https://192.168.1.101/api/services"
+      method: POST
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+      body:
+        action: assign_tags
+        resources:
+          href: "{{ svc_url }}"
+          tags: 
+            name: "/prove_scope/all"

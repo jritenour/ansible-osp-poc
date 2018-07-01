@@ -1,0 +1,21 @@
+--- 
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+  - name: Assign Provisioning Scope tag to service
+    uri:
+      url: https://192.168.1.101/api/services/20000000000021
+      method: POST
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+      body:
+        action: assign_tags
+        tags: 
+          name: "/prov_scope/all"
+

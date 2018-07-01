@@ -1,0 +1,65 @@
+---
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+  - name: Get student-"{{ sid }}" tenant id & href
+    uri:
+      url: "https://192.168.1.101/api/tenants?filter[]=name=student-{{ sid }}&expand=resources"
+      method: GET
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+    register: tenant
+  
+  - debug:
+      var: tenant.json.resources[0].href
+  
+  - name: Create student-"{{ sid }}" group & map to tenant
+    uri:
+      url: "https://192.168.1.101/api/groups"
+      method: POST
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+      body:
+        action: create
+        description: "Student-{{ sid}}-group"
+        role: 
+          id: 20000000000021
+        tenant:
+          href: "{{ tenant.json.resources[0].href }}"
+        filters:
+          managed: [ "/prov_scope/all" ]
+    register: group 
+
+  - debug:
+      var: group.json
+  
+  - name: Create student-"{{ sid }}" user
+    uri:
+      url: "https://192.168.1.101/api/users"
+      method: POST
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+      body:
+        action: create
+        userid: student{{ sid }}
+        password: redhat
+        name: Student{{ sid }}
+        group:
+          id: "{{ group.json.results[0].id }}"
+    register: user
