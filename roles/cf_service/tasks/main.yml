@@ -44,7 +44,7 @@
         Content-Type: "application/json"
       body:
         action: create
-        description: "Student-{{ sid}}-group"
+        description: "Student-{{ sid }}-group"
         role:
           id: 20000000000021
         tenant:
