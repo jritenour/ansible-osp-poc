@@ -93,7 +93,7 @@
       svc_url: "{{ service.json.resources|last|json_query('href') }}"
 
   - name: Set new user as owner of service
-        uri:
+    uri:
       url: "{{ svc_url }}"
       method: POST
       return_content: yes
