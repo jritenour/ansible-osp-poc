@@ -92,8 +92,8 @@
     set_fact:
       svc_url: "{{ service.json.resources|last|json_query('href') }}"
 
-  - name: Assign Provisioning Scope tag to service
-    uri:
+  - name: Set new user as owner of service
+        uri:
       url: "{{ svc_url }}"
       method: POST
       return_content: yes
@@ -104,9 +104,10 @@
       headers:
         Content-Type: "application/json"
       body:
-        action: assign_tags
-        tags: 
-          name: "/prov_scope/all"
+        action: set_ownership
+        resource:
+          owner:
+            userid: student"{{ sid }}
 
   - name: Refresh provider in CloudForms
     uri:

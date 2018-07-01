@@ -26,7 +26,7 @@
 
   - name: Assign Provisioning Scope tag to service
     uri:
-      url: "https://192.168.1.101/api/services"
+      url: "{{ svc_url }}"
       method: POST
       return_content: yes
       user: admin
@@ -36,8 +36,8 @@
       headers:
         Content-Type: "application/json"
       body:
-        action: assign_tags
-        resources:
-          href: "{{ svc_url }}"
-          tags: 
-            name: "/prove_scope/all"
+        action: set_ownership
+        resource: 
+          owner:
+            userid: student12
+
