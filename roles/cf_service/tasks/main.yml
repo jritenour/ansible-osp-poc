@@ -144,6 +144,9 @@
         resource:
           owner:
             userid: student{{ sid }}
+          group:
+            description: "Student-{{ sid }}-group"
+
 
   - set_fact: find_vm_url0="http://192.168.1.101/api/vms?expand=resources&attributes=href,uid_ems&filter[]=uid_ems='{{ new_vm_uuid0 }}'"
   - set_fact: find_vm_url1="http://192.168.1.101/api/vms?expand=resources&attributes=href,uid_ems&filter[]=uid_ems='{{ new_vm_uuid1 }}'"
