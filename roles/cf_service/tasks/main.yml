@@ -17,6 +17,42 @@
     set_fact:
       provider_url: "https://192.168.1.101/api/providers/20000000000005"
 
+  - name: Refresh provider in CloudForms
+    uri:
+      url: "{{ provider_url }}"
+      method: POST
+      body:
+        action: refresh
+      body_format: json
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: False
+      headers:
+        Content-Type: "application/json"
+      status_code: 200
+    register: output
+#  - debug: var=output
+  - name: set the task href
+    set_fact:
+      task_url: "{{ output.json.task_href}}"
+#  - debug: var=task_url
+
+  - name: Wait for the refresh to end
+    uri:
+      url: "{{ task_url }}"
+      method: GET
+      validate_certs: False
+      user: admin
+      password: "{{ cf_password }}"
+      headers:
+        Content-Type: "application/json"
+      status_code: 200
+    register: task_result
+    until: task_result.json.state == 'Finished' or task_result.json.status == 'Error'
+    failed_when: task_result.json.status == 'Error'
+    retries: 5
+    delay: 20
+  - debug: var=task_result
 
   - name: Get student-"{{ sid }}" tenant id & href
     uri:
@@ -108,43 +144,6 @@
         resource:
           owner:
             userid: student{{ sid }}
-
-  - name: Refresh provider in CloudForms
-    uri:
-      url: "{{ provider_url }}"
-      method: POST
-      body:
-        action: refresh
-      body_format: json
-      user: admin
-      password: "{{ cf_password }}"
-      validate_certs: False
-      headers:
-        Content-Type: "application/json"
-      status_code: 200
-    register: output
-#  - debug: var=output
-  - name: set the task href
-    set_fact:
-      task_url: "{{ output.json.task_href}}"
-#  - debug: var=task_url
-
-  - name: Wait for the refresh to end
-    uri:
-      url: "{{ task_url }}"
-      method: GET
-      validate_certs: False
-      user: admin
-      password: "{{ cf_password }}"
-      headers:
-        Content-Type: "application/json"
-      status_code: 200
-    register: task_result
-    until: task_result.json.state == 'Finished' or task_result.json.status == 'Error'
-    failed_when: task_result.json.status == 'Error'
-    retries: 5
-    delay: 20
-  - debug: var=task_result
 
   - set_fact: find_vm_url0="http://192.168.1.101/api/vms?expand=resources&attributes=href,uid_ems&filter[]=uid_ems='{{ new_vm_uuid0 }}'"
   - set_fact: find_vm_url1="http://192.168.1.101/api/vms?expand=resources&attributes=href,uid_ems&filter[]=uid_ems='{{ new_vm_uuid1 }}'"
