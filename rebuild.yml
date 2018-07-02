@@ -1,6 +1,7 @@
 ---
 - hosts: localhost
   connection: local
+  gather_facts: no
   vars:
     config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
   tasks:
@@ -14,6 +15,17 @@
     os_auth: 
       cloud: devstack
 
+  - name: Get facts for instance
+    os_server_facts:
+      cloud: devstack
+      auth:
+        project_name: student-{{ sid }}
+      server: "{{ vm_name }}"
+    register: vm
+
+  - debug:
+      var: vm.ansible_facts.openstack_servers[0].image.id
+    
   - name: Rebuild Instance
     os_server_actions:
       cloud: devstack
@@ -21,4 +33,4 @@
         project_name: student-{{ sid }}
       server: "{{ vm_name }}"
       action: rebuild
-      image: "{{ image }}"
+      image: "{{ vm.ansible_facts.openstack_servers[0].image.id }}"
