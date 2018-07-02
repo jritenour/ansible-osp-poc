@@ -194,7 +194,7 @@
           group:
             description: "Student-{{ sid }}-group"
     with_items: "{{ token_output.results }}"
-    when: item.name | regex_search('visible')
+    when: item.json.resources[0].name | regex_search('visible')
 
   - set_fact: cf_vm_href0="{{ token_output.results[0].json.resources[0].href }}"
   - set_fact: cf_vm_href1="{{ token_output.results[1].json.resources[0].href }}"
