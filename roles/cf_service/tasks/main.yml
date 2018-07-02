@@ -173,7 +173,7 @@
       - "{{ find_vm_url2 }}"
       - "{{ find_vm_url3 }}"
 
-#  - debug: var=token_output
+  - debug: var=token_output
 
   - name: Set ownership for visible instances
     uri:
