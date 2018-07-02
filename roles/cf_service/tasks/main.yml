@@ -107,7 +107,7 @@
         action: set_ownership
         resource:
           owner:
-            userid: student"{{ sid }}
+            userid: student{{ sid }}
 
   - name: Refresh provider in CloudForms
     uri:

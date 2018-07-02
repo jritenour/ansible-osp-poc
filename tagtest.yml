@@ -39,5 +39,6 @@
         action: set_ownership
         resource: 
           owner:
-            userid: student12
-
+            userid: student{{ sid }}
+          group: 
+            description: "Student-{{ sid }}-group" 
