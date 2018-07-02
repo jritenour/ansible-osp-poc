@@ -1,8 +1,7 @@
 ---
 - hosts: all
+  gather_facts: no
   tasks: 
-  - name: get facts
-    setup:
   - name: Add central-range port to student "{{ sid }}" router
     shell: source /home/stack/overcloudrc; openstack router add port router-student-{{ sid }} port-{{ sid }}
-    when: ansible_hostname == undercloud
+    when: inventory_hostname != "localhost"
