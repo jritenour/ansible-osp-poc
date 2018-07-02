@@ -1,0 +1,41 @@
+--- 
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+ 
+  - name: Call to CloudForms to find href for new_vm_uuid
+    uri:
+      url: "https://192.168.1.101/api/vms?expand=resources&attributes=href,name,uid_ems&filter[]=uid_ems='aa228ea1-5983-4129-afb2-57c4a0408baa'"
+      method: GET
+      validate_certs: no
+      user: admin
+      password: "{{ cf_password }}"
+      headers:
+        Content-Type: "application/json"
+      body_format: json
+      return_content: yes
+    register: token_output
+
+  - debug: 
+      var: token_output.json.resources
+  - name: Assign Provisioning Scope tag to service
+    uri:
+      url: "{{ item.href }}"
+      method: POST
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+      body:
+        action: set_ownership
+        resource: 
+          owner:
+            userid: student{{ sid }}
+          group: 
+            description: "Student-{{ sid }}-group" 
+    with_items: "{{ token_output.json.resources }}"
+    when: item.name | regex_search('visible')

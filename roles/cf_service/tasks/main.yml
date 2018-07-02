@@ -148,10 +148,10 @@
             description: "Student-{{ sid }}-group"
 
 
-  - set_fact: find_vm_url0="http://192.168.1.101/api/vms?expand=resources&attributes=href,uid_ems&filter[]=uid_ems='{{ new_vm_uuid0 }}'"
-  - set_fact: find_vm_url1="http://192.168.1.101/api/vms?expand=resources&attributes=href,uid_ems&filter[]=uid_ems='{{ new_vm_uuid1 }}'"
-  - set_fact: find_vm_url2="http://192.168.1.101/api/vms?expand=resources&attributes=href,uid_ems&filter[]=uid_ems='{{ new_vm_uuid2 }}'"
-  - set_fact: find_vm_url3="http://192.168.1.101/api/vms?expand=resources&attributes=href,uid_ems&filter[]=uid_ems='{{ new_vm_uuid3 }}'"
+  - set_fact: find_vm_url0="http://192.168.1.101/api/vms?expand=resources&attributes=href,name,uid_ems&filter[]=uid_ems='{{ new_vm_uuid0 }}'"
+  - set_fact: find_vm_url1="http://192.168.1.101/api/vms?expand=resources&attributes=href,name,uid_ems&filter[]=uid_ems='{{ new_vm_uuid1 }}'"
+  - set_fact: find_vm_url2="http://192.168.1.101/api/vms?expand=resources&attributes=href,name,uid_ems&filter[]=uid_ems='{{ new_vm_uuid2 }}'"
+  - set_fact: find_vm_url3="http://192.168.1.101/api/vms?expand=resources&attributes=href,name,uid_ems&filter[]=uid_ems='{{ new_vm_uuid3 }}'"
 
 # - debug: var=find_vm_url1
  
@@ -174,6 +174,27 @@
       - "{{ find_vm_url3 }}"
 
 #  - debug: var=token_output
+
+  - name: Set ownership for visible instances
+    uri:
+      url: "{{ item.href }}"
+      method: POST
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+      body:
+        action: set_ownership
+        resource:
+          owner:
+            userid: student{{ sid }}
+          group:
+            description: "Student-{{ sid }}-group"
+    with_items: "{{ token_output.json.resources }}"
+    when: item.name | regex_search('visible')
 
   - set_fact: cf_vm_href0="{{ token_output.results[0].json.resources[0].href }}"
   - set_fact: cf_vm_href1="{{ token_output.results[1].json.resources[0].href }}"
