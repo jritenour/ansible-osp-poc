@@ -82,5 +82,3 @@
 
   roles:
   - cf_service
-
-- import_playbook: routercmd.yml

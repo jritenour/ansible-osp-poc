@@ -36,16 +36,16 @@
       network_name: student-{{ sid }}-hiddennet
       cidr: 139.39.0.0/24
 
-  - name: Create the central-range port
-    os_port:
-      cloud: devstack
-      auth:
-        project_name: student-{{ sid }}
-      state: present
-      name: port-{{ sid }}
-      network: central-range
-      fixed_ips:
-        - ip_address: 172.16.250.1{{ sid }}
+#  - name: Create the central-range port
+#    os_port:
+#      cloud: devstack
+#      auth:
+#        project_name: student-{{ sid }}
+#      state: present
+#      name: port-{{ sid }}
+#      network: central-range
+#      fixed_ips:
+#        - ip_address: 172.16.250.1{{ sid }}
 
   - name: Create "{{ sid }}" router
     os_router:
@@ -59,7 +59,4 @@
       interfaces:
         - student-{{ sid }}-visiblesub
         - student-{{ sid }}-hiddensub
-#        - net: central-range
-#          subnet: central-range-sub
-#          portip: 172.16.250.1{{ sid }}
 
