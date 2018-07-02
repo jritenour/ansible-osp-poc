@@ -5,18 +5,18 @@
     config_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
   tasks:
 
-#  - stat: path="{{ config_file }}"
-#    register: st
-#  - include_vars: "{{ config_file }}"
-#    when: st.stat.exists and st.stat.isreg
+  - stat: path="{{ config_file }}"
+    register: st
+  - include_vars: "{{ config_file }}"
+    when: st.stat.exists and st.stat.isreg
 
-#  - name: Authenticate to OpenStack environment defined in credentials
-#    os_auth: 
-#      cloud: devstack
+  - name: Authenticate to OpenStack environment defined in credentials
+    os_auth: 
+      cloud: devstack
 
   - name: Rebuild Instance
     os_server_actions:
-#      cloud: devstack
+      cloud: devstack
       auth: 
         project_name: student-{{ sid }}
       server: "{{ vm_name }}"
