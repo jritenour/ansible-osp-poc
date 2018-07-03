@@ -67,6 +67,22 @@
         Content-Type: "application/json"
     register: tenant
 
+  - name: Check if group exists
+    uri:
+      url: "https://192.168.1.101/api/groups?filter[]=description=Student-{{ sid }}-group&expand=resources"
+      method: GET
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+    register: cfgroups
+
+  - debug:
+      var: cfgroups.json
+
   - name: Create student-"{{ sid }}" group & map to tenant
     uri:
       url: "https://192.168.1.101/api/groups"
@@ -87,7 +103,21 @@
           href: "{{ tenant.json.resources[0].href }}"
         filters:
           managed: [ "/prov_scope/all" ]
-    register: group
+    register: newgroup
+    when: cfgroups.json.subcount == 0
+
+  - name: Check if user exists
+    uri:
+      url: "https://192.168.1.101/api/users?filter[]=userid=student{{ sid }}&expand=resources"
+      method: GET
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+    register: cfusers
 
   - name: Create student-"{{ sid }}" user
     uri:
@@ -106,9 +136,9 @@
         password: redhat
         name: Student{{ sid }}
         group:
-          id: "{{ group.json.results[0].id }}"
+          id: "{{ newgroup.json.results[0].id }}"
     register: user
-                     
+    when: cfusers.json.subcount == 0           
 
   - name: Get services
     uri:
